@@ -1,0 +1,30 @@
+smart-restaurant-platform/
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── sockets/
+│   │   ├── utils/
+│   │   ├── middleware/
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── package.json
+│   └── .env
+├── frontend/
+│   ├── app/
+│   ├── components/
+│   ├── lib/
+│   ├── public/
+│   ├── package.json
+│   └── .env.local
+├── admin-dashboard/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── .env
+├── docker-compose.yml
+├── README.md
+└── .gitignore

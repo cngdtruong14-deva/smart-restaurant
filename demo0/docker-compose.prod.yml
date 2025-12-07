@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: smart-restaurant-mongodb-dev
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_dev:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      - MONGO_INITDB_DATABASE=smart_restaurant
+    restart: unless-stopped
+    networks:
+      - smart-restaurant-network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: smart-restaurant-server-dev
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongodb:27017/smart_restaurant
+      - JWT_SECRET=dev_jwt_secret_change_in_production
+      - PORT=3001
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    networks:
+      - smart-restaurant-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: smart-restaurant-client-dev
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    environment:
+      - EXPO_PUBLIC_API_URL=http://localhost:3001/api
+      - EXPO_USE_FAST_LANE=true
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+      - /app/.expo
+    depends_on:
+      - server
+    stdin_open: true
+    tty: true
+    networks:
+      - smart-restaurant-network
+
+volumes:
+  mongodb_data_dev:
+
+networks:
+  smart-restaurant-network:
+    driver: bridge
